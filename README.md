@@ -2,6 +2,8 @@
 
 Plugins, themes, and configurations for `pi`.
 
+![Screenshot](screenshot.png)
+
 ## Installation
 
 ```bash
