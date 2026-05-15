@@ -5,7 +5,7 @@ Plugins, themes, and configurations for `pi`.
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/trudeeh/coding-agent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/TrudeEH/coding-agent/refs/heads/master/install.sh | bash
 ```
 
 Installer clones/updates this repo at `~/.local/share/coding-agent`, copies `pi/` into `~/.pi`, installs pi if missing, installs Node/npm/git/curl via Homebrew, apt, dnf, or pacman if missing, installs `rtk`, then runs `pi update` to install plugin dependencies.
