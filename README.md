@@ -32,5 +32,6 @@ Custom:
 - `/ssh off` - disable SSH routing.
 - `/usage` - show Codex quota plus current token/cost usage.
 - `/pi` - show LLM-visible tools and injected skills.
+- `/caveman` - configure caveman (save on tokens).
 - `/skill:librarian` - research OSS library internals with source links.
 - `/skill:pi-subagents` - delegate work to subagents/chains/parallel runs.
