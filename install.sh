@@ -7,107 +7,68 @@ PI_HOME="${PI_HOME:-$HOME/.pi}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || true)"
 REPO_DIR="${REPO_DIR:-}"
 
-install_node_npm() {
-  if command -v npm >/dev/null 2>&1; then
-    return
-  fi
+have() { command -v "$1" >/dev/null 2>&1; }
 
-  if command -v brew >/dev/null 2>&1; then
+install_packages() {
+  if have brew; then
+    brew install "$@"
+  elif have apt-get; then
+    sudo apt-get update
+    sudo apt-get install -y "$@"
+  elif have dnf; then
+    sudo dnf install -y "$@"
+  elif have pacman; then
+    sudo pacman -Sy --needed --noconfirm "$@"
+  else
+    echo "No supported package manager found. Install missing tools, then rerun this script." >&2
+    exit 1
+  fi
+}
+
+have git || install_packages git
+
+if ! have npm; then
+  if have brew; then
     brew install node
-  elif command -v apt-get >/dev/null 2>&1; then
-    sudo apt-get update
-    sudo apt-get install -y nodejs npm git
-  elif command -v dnf >/dev/null 2>&1; then
-    sudo dnf install -y nodejs npm git
-  elif command -v pacman >/dev/null 2>&1; then
-    sudo pacman -Sy --needed --noconfirm nodejs npm git
   else
-    echo "npm not found. Install Node.js/npm, then rerun this script." >&2
-    exit 1
+    install_packages nodejs npm git
   fi
-}
+fi
 
-install_git() {
-  if command -v git >/dev/null 2>&1; then
-    return
-  fi
-
-  if command -v brew >/dev/null 2>&1; then
-    brew install git
-  elif command -v apt-get >/dev/null 2>&1; then
-    sudo apt-get update
-    sudo apt-get install -y git
-  elif command -v dnf >/dev/null 2>&1; then
-    sudo dnf install -y git
-  elif command -v pacman >/dev/null 2>&1; then
-    sudo pacman -Sy --needed --noconfirm git
-  else
-    echo "git not found. Install git, then rerun this script." >&2
-    exit 1
-  fi
-}
-
-install_curl() {
-  if command -v curl >/dev/null 2>&1; then
-    return
-  fi
-
-  if command -v brew >/dev/null 2>&1; then
-    brew install curl
-  elif command -v apt-get >/dev/null 2>&1; then
-    sudo apt-get update
-    sudo apt-get install -y curl
-  elif command -v dnf >/dev/null 2>&1; then
-    sudo dnf install -y curl
-  elif command -v pacman >/dev/null 2>&1; then
-    sudo pacman -Sy --needed --noconfirm curl
-  else
-    echo "curl not found. Install curl, then rerun this script." >&2
-    exit 1
-  fi
-}
-
-install_rtk() {
-  if command -v rtk >/dev/null 2>&1; then
-    return
-  fi
-
-  if command -v brew >/dev/null 2>&1; then
+if ! have rtk; then
+  if have brew; then
     brew install rtk
   else
-    install_curl
+    have curl || install_packages curl
     curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
     export PATH="$HOME/.local/bin:$PATH"
   fi
-
-  if ! command -v rtk >/dev/null 2>&1; then
-    echo "rtk install completed, but rtk is not on PATH. Add ~/.local/bin to PATH, then rerun this script." >&2
-    exit 1
-  fi
-}
-
-install_git
-install_node_npm
-install_rtk
-
-if [ -n "$REPO_DIR" ]; then
-  :
-elif [ -n "$SCRIPT_DIR" ] && [ -d "$SCRIPT_DIR/.git" ] && [ -d "$SCRIPT_DIR/pi" ]; then
-  REPO_DIR="$SCRIPT_DIR"
-else
-  REPO_DIR="$DEFAULT_REPO_DIR"
 fi
 
-if [ ! -d "$REPO_DIR/.git" ]; then
-  mkdir -p "$(dirname "$REPO_DIR")"
-  git clone "$REPO_URL" "$REPO_DIR"
-elif [ "$REPO_DIR" = "$DEFAULT_REPO_DIR" ]; then
+if [ -z "$REPO_DIR" ]; then
+  REPO_DIR="$DEFAULT_REPO_DIR"
+  for dir in "$SCRIPT_DIR" "$(pwd -P)"; do
+    if [ -n "$dir" ] && [ -d "$dir/pi" ]; then
+      REPO_DIR="$dir"
+      break
+    fi
+  done
+fi
+
+if [ ! -d "$REPO_DIR/pi" ]; then
+  if [ "$REPO_DIR" != "$DEFAULT_REPO_DIR" ]; then
+    echo "pi/ not found in $REPO_DIR" >&2
+    exit 1
+  fi
+
+  rm -rf "$DEFAULT_REPO_DIR"
+  mkdir -p "$(dirname "$DEFAULT_REPO_DIR")"
+  git clone "$REPO_URL" "$DEFAULT_REPO_DIR"
+elif [ "$REPO_DIR" = "$DEFAULT_REPO_DIR" ] && [ -d "$REPO_DIR/.git" ]; then
   git -C "$REPO_DIR" pull --ff-only
 fi
 
-if ! command -v pi >/dev/null 2>&1; then
-  npm install -g @earendil-works/pi-coding-agent
-fi
+have pi || npm install -g @earendil-works/pi-coding-agent
 
 mkdir -p "$PI_HOME"
 cp -a "$REPO_DIR/pi/." "$PI_HOME/"
