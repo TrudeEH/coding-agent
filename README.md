@@ -7,7 +7,7 @@ Plugins, themes, and configurations for `pi`.
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/trudeeh/coding-agent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/TrudeEH/coding-agent/refs/heads/master/install.sh | bash
 ```
 
 Installer clones/updates this repo at `~/.local/share/coding-agent`, copies `pi/` into `~/.pi`, installs pi if missing, installs Node/npm/git/curl via Homebrew, apt, dnf, or pacman if missing, installs `rtk`, then runs `pi update` to install plugin dependencies.
@@ -34,5 +34,6 @@ Custom:
 - `/ssh off` - disable SSH routing.
 - `/usage` - show Codex quota plus current token/cost usage.
 - `/pi` - show LLM-visible tools and injected skills.
+- `/caveman` - configure caveman (save on tokens).
 - `/skill:librarian` - research OSS library internals with source links.
 - `/skill:pi-subagents` - delegate work to subagents/chains/parallel runs.
