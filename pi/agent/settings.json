@@ -1,0 +1,17 @@
+{
+  "lastChangelogVersion": "0.74.0",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
+  "defaultThinkingLevel": "low",
+  "theme": "terminal-orange",
+  "packages": [
+    "npm:pi-subagents",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-simplify",
+    "npm:pi-web-access",
+    "npm:pi-terminal-theme",
+    "npm:pi-rtk-optimizer",
+    "npm:pi-caveman",
+    "npm:@juicesharp/rpiv-btw"
+  ]
+}

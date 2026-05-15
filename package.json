@@ -1,0 +1,8 @@
+{
+  "name": "pi-dotfiles",
+  "private": true,
+  "description": "Portable pi configuration, extensions, themes, and plugin settings",
+  "scripts": {
+    "install:pi": "bash scripts/install.sh"
+  }
+}

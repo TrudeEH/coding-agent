@@ -1,0 +1,14 @@
+# pi secrets / local state
+pi/agent/auth.json
+pi/agent/sessions/
+pi/agent/git/
+pi/agent/npm/
+pi/agent/bin/
+pi/auth.json
+
+# backups made by install script
+*.bak.*
+
+# deps / caches
+node_modules/
+.DS_Store
