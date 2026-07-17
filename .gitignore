@@ -12,6 +12,10 @@ agent/npm/
 agent/bin/
 agent/models-store.json
 agent/trust.json
+agent/mcp-cache.json
+
+# MCP credentials (OAuth access and refresh tokens)
+agent/mcp-oauth/
 plans/
 
 # Local/generated files
