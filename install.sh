@@ -2,10 +2,8 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/trudeeh/coding-agent.git"
-DEFAULT_REPO_DIR="$HOME/.local/share/coding-agent"
 PI_HOME="${PI_HOME:-$HOME/.pi}"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || true)"
-REPO_DIR="${REPO_DIR:-}"
+REPO_DIR="${REPO_DIR:-$PI_HOME}"
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
@@ -45,36 +43,26 @@ if ! have rtk; then
   fi
 fi
 
-if [ -z "$REPO_DIR" ]; then
-  REPO_DIR="$DEFAULT_REPO_DIR"
-  for dir in "$SCRIPT_DIR" "$(pwd -P)"; do
-    if [ -n "$dir" ] && [ -d "$dir/pi" ]; then
-      REPO_DIR="$dir"
-      break
-    fi
-  done
-fi
-
-if [ ! -d "$REPO_DIR/pi" ]; then
-  if [ "$REPO_DIR" != "$DEFAULT_REPO_DIR" ]; then
-    echo "pi/ not found in $REPO_DIR" >&2
-    exit 1
-  fi
-
-  rm -rf "$DEFAULT_REPO_DIR"
-  mkdir -p "$(dirname "$DEFAULT_REPO_DIR")"
-  git clone "$REPO_URL" "$DEFAULT_REPO_DIR"
-elif [ "$REPO_DIR" = "$DEFAULT_REPO_DIR" ] && [ -d "$REPO_DIR/.git" ]; then
+if [ -d "$REPO_DIR/.git" ]; then
   git -C "$REPO_DIR" pull --ff-only
+else
+  if [ -e "$REPO_DIR" ] && [ -n "$(find "$REPO_DIR" -mindepth 1 -maxdepth 1 2>/dev/null | head -n 1)" ]; then
+    backup="$REPO_DIR.bak-install-$(date +%Y%m%d%H%M%S)"
+    mv "$REPO_DIR" "$backup"
+    git clone "$REPO_URL" "$REPO_DIR"
+    cp -a "$backup/." "$REPO_DIR/"
+    echo "Existing pi home preserved in $backup"
+  else
+    rm -rf "$REPO_DIR"
+    mkdir -p "$(dirname "$REPO_DIR")"
+    git clone "$REPO_URL" "$REPO_DIR"
+  fi
 fi
 
 have pi || npm install -g @earendil-works/pi-coding-agent
 
-mkdir -p "$PI_HOME"
-cp -a "$REPO_DIR/pi/." "$PI_HOME/"
-
 pi update
 
-echo "Installed pi dotfiles to $PI_HOME"
-echo "Repo: $REPO_DIR"
+echo "Installed pi repo at $REPO_DIR"
+echo "Edit $REPO_DIR directly; changes are git-tracked there."
 echo "Restart pi or run /reload"

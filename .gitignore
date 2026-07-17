@@ -1,14 +1,30 @@
-# pi secrets / local state
-pi/agent/auth.json
-pi/agent/sessions/
-pi/agent/git/
-pi/agent/npm/
-pi/agent/bin/
-pi/auth.json
+# Secrets / credentials
+agent/auth.json
+auth.json
+.env
+.env.*
+!.env.example
 
-# backups made by install script
-*.bak.*
+# Pi runtime state
+agent/sessions/
+agent/git/
+agent/npm/
+agent/bin/
+agent/models-store.json
+agent/trust.json
+plans/
 
-# deps / caches
+# Local/generated files
 node_modules/
+*.log
+*.tmp
+*.temp
 .DS_Store
+Thumbs.db
+
+# Backups / old layout
+*.bak.*
+*.bak-*
+.pi.bak-*/
+.pi.backup-*
+pi/

@@ -1,6 +1,6 @@
 # Trude's Coding Agent
 
-Plugins, themes, and configurations for `pi`.
+Plugins and configurations for `pi`.
 
 ![Screenshot](screenshot.png)
 
@@ -10,7 +10,7 @@ Plugins, themes, and configurations for `pi`.
 curl -fsSL https://raw.githubusercontent.com/TrudeEH/coding-agent/refs/heads/master/install.sh | bash
 ```
 
-Installer clones/updates this repo at `~/.local/share/coding-agent`, copies `pi/` into `~/.pi`, installs pi if missing, installs Node/npm/git/curl via Homebrew, apt, dnf, or pacman if missing, installs `rtk`, then runs `pi update` to install plugin dependencies.
+Installer clones/updates this repo directly at `~/.pi`, installs pi if missing, installs Node/npm/git/curl via Homebrew, apt, dnf, or pacman if missing, installs `rtk`, then runs `pi update` to install plugin dependencies. Edit `~/.pi` directly; changes are git-tracked there.
 
 ## Useful Commands
 
@@ -18,8 +18,8 @@ Built-in pi:
 
 - `/login` - authenticate provider.
 - `/model` - switch model.
-- `/settings` - change theme, thinking level, transport, etc.
-- `/reload` - reload extensions, skills, prompts, themes.
+- `/settings` - change thinking level, transport, etc.
+- `/reload` - reload extensions, skills, and prompts.
 - `/session` - show current session info.
 - `/resume` - resume previous session.
 - `/compact` - compact context.
@@ -32,8 +32,6 @@ Custom:
 - `/ssh user@host[:/path]` - run pi tools remotely over SSH.
 - `/ssh status` - show SSH routing state.
 - `/ssh off` - disable SSH routing.
-- `/usage` - show Codex quota plus current token/cost usage.
 - `/pi` - show LLM-visible tools and injected skills.
-- `/caveman` - configure caveman (save on tokens).
 - `/skill:librarian` - research OSS library internals with source links.
 - `/skill:pi-subagents` - delegate work to subagents/chains/parallel runs.
