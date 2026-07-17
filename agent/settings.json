@@ -9,11 +9,15 @@
     "npm:pi-simplify",
     "npm:pi-web-access",
     "npm:pi-rtk-optimizer",
-    "npm:@juicesharp/rpiv-btw"
+    "npm:@juicesharp/rpiv-btw",
+    "npm:@vigolium/piolium",
+    "npm:pi-mcp-adapter"
   ],
   "terminal": {
     "showTerminalProgress": true
   },
   "showHardwareCursor": false,
-  "theme": "dark"
+  "theme": "dark",
+  "enableInstallTelemetry": false,
+  "collapseChangelog": true
 }
